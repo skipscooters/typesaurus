@@ -1,9 +1,11 @@
-import { Ref } from '../ref';
-import { Collection } from '../collection';
+import { Ref } from '../ref'
+import { Collection } from '../collection'
 /**
  * The subcollection function type.
  */
-export declare type Subcollection<RefModel, CollectionModel> = (ref: Ref<RefModel> | string) => Collection<CollectionModel>;
+export declare type Subcollection<RefModel, CollectionModel> = (
+  ref: Ref<RefModel> | string
+) => Collection<CollectionModel>
 /**
  * Creates a subcollection function which accepts parent document reference
  * and returns the subcollection trasnformed into a collection object.
@@ -28,5 +30,8 @@ export declare type Subcollection<RefModel, CollectionModel> = (ref: Ref<RefMode
  * @param parentCollection - The parent collection
  * @returns Function which accepts parent document
  */
-declare function subcollection<CollectionModel, RefModel>(name: string, parentCollection: Collection<RefModel>): Subcollection<RefModel, CollectionModel>;
-export { subcollection };
+declare function subcollection<CollectionModel, RefModel>(
+  name: string,
+  parentCollection: Collection<RefModel>
+): Subcollection<RefModel, CollectionModel>
+export { subcollection }

@@ -1,5 +1,5 @@
-import { Collection } from '../collection';
-import { Doc } from '../doc';
+import { Collection } from '../collection'
+import { Doc } from '../doc'
 /**
  * Subscribes to all documents in a collection.
  *
@@ -24,4 +24,8 @@ import { Doc } from '../doc';
  * the initial fetch is resolved or the collection updates.
  * @param onError - The function is called with error when request fails.
  */
-export default function onAll<Model>(collection: Collection<Model>, onResult: (docs: Doc<Model>[]) => any, onError?: (error: Error) => any): () => void;
+export default function onAll<Model>(
+  collection: Collection<Model>,
+  onResult: (docs: Doc<Model>[]) => any,
+  onError?: (error: Error) => any
+): () => void

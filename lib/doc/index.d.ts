@@ -1,11 +1,11 @@
-import { Ref } from '../ref';
+import { Ref } from '../ref'
 /**
  * The document type. It contains the reference in the DB and the model data.
  */
 export interface Doc<Model> {
-    __type__: 'doc';
-    data: Model;
-    ref: Ref<Model>;
+  __type__: 'doc'
+  data: Model
+  ref: Ref<Model>
 }
 /**
  * Creates a document object.
@@ -32,4 +32,4 @@ export interface Doc<Model> {
  * @param data - The model data
  * @returns The document object
  */
-export declare function doc<Model>(ref: Ref<Model>, data: Model): Doc<Model>;
+export declare function doc<Model>(ref: Ref<Model>, data: Model): Doc<Model>

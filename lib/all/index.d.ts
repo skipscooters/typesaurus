@@ -1,5 +1,5 @@
-import { Collection } from '../collection';
-import { Doc } from '../doc';
+import { Collection } from '../collection'
+import { Doc } from '../doc'
 /**
  * Returns all documents in a collection.
  *
@@ -22,4 +22,6 @@ import { Doc } from '../doc';
  * @param collection - The collection to get all documents from
  * @returns A promise to all documents
  */
-export default function all<Model>(collection: Collection<Model>): Promise<Doc<Model>[]>;
+export default function all<Model>(
+  collection: Collection<Model>
+): Promise<Doc<Model>[]>

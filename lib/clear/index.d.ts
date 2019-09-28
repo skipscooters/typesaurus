@@ -1,2 +1,2 @@
-import remove from '../remove';
-export default remove;
+import remove from '../remove'
+export default remove

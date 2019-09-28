@@ -1,4 +1,4 @@
-import { Collection } from '../collection';
+import { Collection } from '../collection'
 /**
  * Adds a new document with a random id to a collection.
  *
@@ -20,4 +20,7 @@ import { Collection } from '../collection';
  * @param data - The data to add to
  * @returns A promise to the document
  */
-export default function add<Model>(collection: Collection<Model>, data: Model): Promise<import("../doc").Doc<Model>>;
+export default function add<Model>(
+  collection: Collection<Model>,
+  data: Model
+): Promise<import('../doc').Doc<Model>>
