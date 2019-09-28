@@ -1,14 +1,14 @@
 {
   "name": "typesaurus",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Type-safe ORM for Firestore",
   "keywords": [
     "Firebase",
     "Firestore",
     "TypeScript"
   ],
-  "main": "index.js",
-  "repository": "https://github.com/kossnocorp/typesaurus",
+  "main": "lib/index.js",
+  "repository": "https://github.com/skipscooters/typesaurus",
   "author": "Sasha Koss <koss@nocorp.me>",
   "license": "MIT",
   "devDependencies": {
@@ -43,7 +43,7 @@
   },
   "peerDependencies": {
     "@google-cloud/firestore": "^2",
-    "firebase": "^6",
+    "firebase": "^7",
     "firebase-admin": "^8"
   }
 }

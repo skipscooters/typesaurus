@@ -9,7 +9,7 @@ import { Cursor, CursorMethod } from '../cursor'
 import { wrapData, unwrapData } from '../data'
 import { CollectionGroup } from '../group'
 
-type FirebaseQuery =
+export type FirebaseQuery =
   | FirebaseFirestore.CollectionReference
   | FirebaseFirestore.Query
 

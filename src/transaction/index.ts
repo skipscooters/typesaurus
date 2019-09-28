@@ -1,13 +1,16 @@
 import firestore from '../adaptor'
 import get from '../get'
 import { Collection } from '../collection'
-import { Ref, ref } from '../ref'
+import { Ref, ref, pathToRef } from '../ref'
 import { Doc, doc } from '../doc'
 import { wrapData, unwrapData } from '../data'
 import set from '../set'
 import update, { ModelUpdate } from '../update'
 import { Field } from '../field'
 import remove from '../remove'
+import { CollectionGroup } from '../group'
+import { Query, FirebaseQuery, query } from '../query'
+import { Cursor, CursorMethod } from '../cursor'
 
 /**
  * The Transaction API type.
@@ -18,6 +21,7 @@ export type TransactionAPI = {
   update: typeof update
   remove: typeof remove
   clear: typeof remove
+  query: typeof query
 }
 
 /**
@@ -240,6 +244,95 @@ export function transaction(transactionFn: TransactionFunction): Promise<any> {
       await t.delete(firebaseDoc)
     }
 
-    return transactionFn({ get, set, update, remove, clear: remove })
+    /**
+     * Queries a collection.
+     * 
+     * TODO: Add comments and tests.
+     */
+    async function query<Model>(
+      collection: Collection<Model> | CollectionGroup<Model>,
+      queries: Query<Model, keyof Model>[]
+    ): Promise<Doc<Model>[]> {
+      const { firestoreQuery, cursors } = queries.reduce(
+        (acc, q) => {
+          switch (q.type) {
+            case 'order': {
+              const { field, method, cursors } = q
+              acc.firestoreQuery = acc.firestoreQuery.orderBy(
+                field.toString(),
+                method
+              )
+              if (cursors) acc.cursors = acc.cursors.concat(cursors)
+              break
+            }
+    
+            case 'where': {
+              const { field, filter, value } = q
+              const fieldName = Array.isArray(field) ? field.join('.') : field
+              acc.firestoreQuery = acc.firestoreQuery.where(
+                fieldName,
+                filter,
+                unwrapData(value)
+              )
+              break
+            }
+    
+            case 'limit': {
+              const { number } = q
+              acc.firestoreQuery = acc.firestoreQuery.limit(number)
+              break
+            }
+          }
+    
+          return acc
+        },
+        {
+          firestoreQuery:
+            collection.__type__ === 'collectionGroup'
+              ? firestore().collectionGroup(collection.path)
+              : firestore().collection(collection.path),
+          cursors: []
+        } as {
+          firestoreQuery: FirebaseQuery
+          cursors: Cursor<Model, keyof Model>[]
+        }
+      )
+    
+      const groupedCursors = cursors.reduce(
+        (acc, cursor) => {
+          let methodValues = acc.find(([method]) => method === cursor.method)
+          if (!methodValues) {
+            methodValues = [cursor.method, []]
+            acc.push(methodValues)
+          }
+          methodValues[1].push(unwrapData(cursor.value))
+          return acc
+        },
+        [] as [CursorMethod, any[]][]
+      )
+    
+      const paginatedFirestoreQuery =
+        cursors.length && cursors.every(cursor => cursor.value !== undefined)
+          ? groupedCursors.reduce((acc, [method, values]) => {
+              return acc[method](...values)
+            }, firestoreQuery)
+          : firestoreQuery
+    
+      // ^ above
+      // TODO: Refactor code above and below because is all the same as in the regular query function
+      const firebaseSnap = await t.get(paginatedFirestoreQuery)
+      // v below
+    
+      return firebaseSnap.docs.map(d =>
+        doc(
+          collection.__type__ === 'collectionGroup'
+            ? pathToRef(d.ref.path)
+            : ref(collection, d.id),
+          wrapData(d.data()) as Model
+        )
+      )
+    }
+
+    return transactionFn({ get, set, update, remove, clear: remove, query })
   })
 }
