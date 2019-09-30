@@ -17,7 +17,7 @@ export declare type TransactionAPI = {
 /**
  * The transaction body function type.
  */
-export declare type TransactionFunction = (api: TransactionAPI) => any
+export declare type TransactionFunction<T> = (api: TransactionAPI) => Promise<T>
 /**
  * Performs transaction.
  *
@@ -36,6 +36,6 @@ export declare type TransactionFunction = (api: TransactionAPI) => any
  * @param transactionFn - The transaction body function that accepts transaction API
  * @returns Promise that is resolved when transaction is closed
  */
-export declare function transaction(
-  transactionFn: TransactionFunction
-): Promise<any>
+export declare function transaction<T>(
+  transactionFn: TransactionFunction<T>
+): Promise<T>
