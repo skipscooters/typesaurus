@@ -27,7 +27,7 @@ export type TransactionAPI = {
 /**
  * The transaction body function type.
  */
-export type TransactionFunction = (api: TransactionAPI) => any
+export type TransactionFunction<T> = (api: TransactionAPI) => Promise<T>
 
 /**
  * Performs transaction.
@@ -47,7 +47,7 @@ export type TransactionFunction = (api: TransactionAPI) => any
  * @param transactionFn - The transaction body function that accepts transaction API
  * @returns Promise that is resolved when transaction is closed
  */
-export function transaction(transactionFn: TransactionFunction): Promise<any> {
+export function transaction<T>(transactionFn: TransactionFunction<T>): Promise<T> {
   return firestore().runTransaction(t => {
     /**
      * Retrieves a document from a collection.
